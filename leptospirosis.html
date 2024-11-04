@@ -300,40 +300,7 @@
       });
     }
 
-    // function calculateScore() {
-    //   let score = 0;
-
-    //   // Adding scores based on the selected options
-    //   if (document.querySelector('input[name="fever"]:checked')?.value === "มี") score += 4;
-    //   if (document.querySelector('input[name="redEyes"]:checked')?.value === "มี") score += 4;
-    //   if (document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี") score += 4;
-    //   if (document.querySelector('input[name="musclePain"]:checked')?.value === "มี") score += 4;
-    //   if (document.querySelector('input[name="headache"]:checked')?.value === "มี") score += 2;
-    //   if (document.querySelector('input[name="jaundice"]:checked')?.value === "มี") score += 2;
-
-    //   // Update total score display
-    //   document.getElementById('totalScore').value = score;
-
-    //   // Show alert with result
-    //   let resultMessage;
-    //   if (score > 10) {
-    //     resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
-    //   } else {
-    //     resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. ขอบคุณที่กรอกแบบฟอร์ม!';
-    //   }
-
-    //   Swal.fire({
-    //     title: 'ผลการคำนวณคะแนน',
-    //     text: resultMessage,
-    //     icon: 'info',
-    //     confirmButtonText: 'ตกลง'
-    //   }).then(() => {
-    //     // ส่งข้อมูลอัตโนมัติ
-    //     submitForm();
-    //   });
-    // }
-
-  function calculateScore() {
+    function calculateScore() {
   let score = 0;
 
   // Adding scores based on the selected options
@@ -361,47 +328,53 @@
     icon: 'info',
     confirmButtonText: 'ตกลง'
   }).then(() => {
-    // ส่งข้อมูลอัตโนมัติ
+    // กดตกลงแล้ว จึงเรียก submitForm()
     submitForm();
   });
 }
-    function submitForm() {
-      if (!profileLoaded) {
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
-          icon: 'error',
-          confirmButtonText: 'ตกลง'
-        });
-        return;
-      }
 
-      const form = document.getElementById('leptospirosisForm');
-      let valid = true;
+function submitForm() {
+  if (!profileLoaded) {
+    Swal.fire({
+      title: 'เกิดข้อผิดพลาด',
+      text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
+      icon: 'error',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
 
-      form.querySelectorAll('input, select').forEach(field => {
-        if (!field.checkValidity()) {
-          field.classList.add('alert-field');
-          valid = false;
-        } else {
-          field.classList.remove('alert-field');
-        }
-      });
+  const form = document.getElementById('leptospirosisForm');
+  let valid = true;
 
-      if (!valid) {
-        Swal.fire({
-          title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-          text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
-          icon: 'warning',
-          confirmButtonText: 'ตกลง'
-        });
-        return;
-      }
+  form.querySelectorAll('input, select').forEach(field => {
+    if (!field.checkValidity()) {
+      field.classList.add('alert-field');
+      valid = false;
+    } else {
+      field.classList.remove('alert-field');
+    }
+  });
 
-      // Calculate score before submitting
-      calculateScore();
+  if (!valid) {
+    Swal.fire({
+      title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
+      icon: 'warning',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
 
-      const formData = {
+  // Calculate score before submitting
+  calculateScore();
+
+  // ส่งข้อมูลอัตโนมัติ
+  sendFormData();
+}
+
+function sendFormData() {
+  const formData = {
         pdpaConsent: document.getElementById('pdpaConsent').checked ? 'ยินยอม' : '',
         reporterName: document.getElementById('reporterName').value,
         reporterPhone: document.getElementById('reporterPhone').value,
@@ -426,28 +399,28 @@
         username: username
       };
 
-      console.log('Submitting form data:', formData);
-      // Here you can use fetch or axios to send formData to your server
-      // ตัวอย่างการส่งข้อมูล (เพิ่มโค้ดนี้ที่นี่):
-      fetch('https://script.google.com/macros/s/AKfycbxjVHoh5l2kd8FTnLsmeSmIHbxTP6fzXYO6Q4H6jI5PRt5C89V-BT0gMiZrSJRLebEHVg/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        // ทำสิ่งที่ต้องการหลังจากส่งข้อมูลสำเร็จ
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  console.log('Submitting form data:', formData);
+  // Here you can use fetch or axios to send formData to your server
+  // ตัวอย่างการส่งข้อมูล (เพิ่มโค้ดนี้ที่นี่):
+  fetch('https://script.google.com/macros/s/AKfycbxjVHoh5l2kd8FTnLsmeSmIHbxTP6fzXYO6Q4H6jI5PRt5C89V-BT0gMiZrSJRLebEHVg/exec', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    // ทำสิ่งที่ต้องการหลังจากส่งข้อมูลสำเร็จ
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
-      // รีเซ็ตฟอร์มหลังจากส่งข้อมูล
-      document.getElementById('leptospirosisForm').reset();
-    }
+  // รีเซ็ตฟอร์มหลังจากส่งข้อมูล
+  document.getElementById('leptospirosisForm').reset();
+}
 </script>
 
 </body>
