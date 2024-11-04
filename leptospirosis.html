@@ -333,66 +333,54 @@
       });
     }
 
-    function submitForm() {
-      if (!profileLoaded) {
-        Swal.fire({
-          title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
-          icon: 'error',
-          confirmButtonText: 'ตกลง'
-        });
-        return;
-      }
+function submitForm() {
+  if (!profileLoaded) {
+    Swal.fire({
+      title: 'เกิดข้อผิดพลาด',
+      text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
+      icon: 'error',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
 
-      const form = document.getElementById('leptospirosisForm');
-      let valid = true;
+  const form = document.getElementById('leptospirosisForm');
+  let valid = true;
 
-      form.querySelectorAll('input, select').forEach(field => {
-        if (!field.checkValidity()) {
-          field.classList.add('alert-field');
-          valid = false;
-        } else {
-          field.classList.remove('alert-field');
-        }
-      });
+  form.querySelectorAll('input, select').forEach(field => {
+    if (!field.checkValidity()) {
+      field.classList.add('alert-field');
+      valid = false;
+    } else {
+      field.classList.remove('alert-field');
+    }
+  });
 
-      if (!valid) {
-        Swal.fire({
-          title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-          text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
-          icon: 'warning',
-          confirmButtonText: 'ตกลง'
-        });
-        return;
-      }
+  if (!valid) {
+    Swal.fire({
+      title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
+      icon: 'warning',
+      confirmButtonText: 'ตกลง'
+    });
+    return;
+  }
 
-      // Calculate score before submitting
-      calculateScore();
+  const formData = {
+    pdpaConsent: document.getElementById('pdpaConsent').checked ? 'ยินยอม' : '',
+    reporterName: document.getElementById('reporterName').value,
+    reporterPhone: document.getElementById('reporterPhone').value,
+    patientName: document.getElementById('patientName').value,
+    patientPhone: document.getElementById('patientPhone').value,
+    occupation: document.getElementById('occupation').value,
+    address: document.getElementById('address').value,
+    villageNumber: document.getElementById('villageNumber').value,
+    subdistrict: document.getElementById('subdistrict').value,
+    // ค่าที่ขาดหายไป
+  };
 
-      const formData = {
-        pdpaConsent: document.getElementById('pdpaConsent').checked ? 'ยินยอม' : '',
-        reporterName: document.getElementById('reporterName').value,
-        reporterPhone: document.getElementById('reporterPhone').value,
-        patientName: document.getElementById('patientName').value,
-        patientPhone: document.getElementById('patientPhone').value,
-        occupation: document.getElementById('occupation').value,
-        address: document.getElementById('address').value,
-        villageNumber: document.getElementById('villageNumber').value,
-        subdistrict: document.getElementById('subdistrict').value,
-        district: document.getElementById('district').value,
-        province: document.getElementById('province').value,
-        symptoms: {
-          fever: document.querySelector('input[name="fever"]:checked')?.value,
-          redEyes: document.querySelector('input[name="redEyes"]:checked')?.value,
-          stiffNeck: document.querySelector('input[name="stiffNeck"]:checked')?.value,
-          musclePain: document.querySelector('input[name="musclePain"]:checked')?.value,
-          headache: document.querySelector('input[name="headache"]:checked')?.value,
-          jaundice: document.querySelector('input[name="jaundice"]:checked')?.value
-        },
-        totalScore: document.getElementById('totalScore').value,
-        userId: userId,
-        username: username
-      };
+  // ที่นี่คุณอาจจะต้องส่ง formData ไปยัง API หรือจัดการกับข้อมูลที่ได้
+}
 
       console.log('Submitting form data:', formData);
       // Here you can use fetch or axios to send formData to your server
