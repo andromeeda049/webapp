@@ -56,7 +56,9 @@
     </div>
     
     <h2><i class="fas fa-user-md"></i> แบบคัดกรองผู้ป่วยสงสัยโรคฉี่หนู</h2>
-  <form id="leptospirosisForm">
+
+    
+    <form id="leptospirosisForm">
 <div class="mb-4 p-3" style="border: 2px solid #007bff; border-radius: 8px; background-color: #e9f7ff;">
         <label class="form-label" style="font-size: 1.1rem; font-weight: bold; color: #007bff;">การแสดงความยินยอมให้ข้อมูล (PDPA Consenting)</label>
         <div class="form-check">
@@ -250,12 +252,18 @@
           <option>สถานีอนามัยบ้านผัง 15 (สอน)</option>
         </select>
       </div>
+      <!-- New Score Calculation Section -->
+      <div class="mb-3">
+        <label for="totalScore" class="form-label">คะแนนรวม</label>
+        <input type="text" class="form-control" id="totalScore" readonly>
+      </div>
+
       <div class="submit-btn">
         <button type="button" class="btn btn-primary" onclick="submitForm()">ส่งข้อมูล</button>
       </div>
     </form>
   </div>
-  
+
   <script>
     let userId = "";
     let username = "";
@@ -292,6 +300,21 @@
       });
     }
 
+    function calculateScore() {
+      let score = 0;
+
+      // Adding scores based on the selected options
+      if (document.querySelector('input[name="fever"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="redEyes"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="stiffNeck"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="musclePain"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="headache"]:checked').value === "มี") score += 2;
+      if (document.querySelector('input[name="jaundice"]:checked').value === "มี") score += 2;
+
+      // Update total score display
+      document.getElementById('totalScore').value = score;
+    }
+
     function submitForm() {
       if (!profileLoaded) {
         Swal.fire({
@@ -325,6 +348,9 @@
         return;
       }
 
+      // Calculate score before submitting
+      calculateScore();
+
       const formData = {
         pdpaConsent: document.getElementById('pdpaConsent') ? 'ยินยอม' : '',
         reporterName: document.getElementById('reporterName').value,
@@ -346,43 +372,38 @@
         riskFactors: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value),
         infectionArea: document.getElementById('infectionArea').value,
         serviceArea: document.getElementById('serviceArea').value,
+        totalScore: document.getElementById('totalScore').value, // Add total score to formData
         userId: userId,
         username: username
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbzQ0A94O5-DuXf0nJqUqqgf_eDk2plKSePYSi_tbcNk-wromKYkuWVAkRQY61udgoceoQ/exec", { // แทนที่ด้วย Web App URL ของ Google Apps Script
+      fetch("https://script.google.com/macros/s/AKfycbzQ0A94O5-DZJg1yo8fJ8Z68j-xed3uVtLDCsG9lNx7t4_0xn64IemAd4dXlQWcU8e3X/exec", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(formData)
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              title: 'สำเร็จ!',
-              text: 'ข้อมูลถูกส่งเรียบร้อยแล้ว',
-              icon: 'success',
-              confirmButtonText: 'ตกลง'
-            });
-            form.reset();
-          } else {
-            Swal.fire({
-              title: 'เกิดข้อผิดพลาด',
-              text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-              icon: 'error',
-              confirmButtonText: 'ตกลง'
-            });
-          }
-        }).catch(error => {
-          console.error('Error:', error);
+      })
+      .then(response => {
+        if (response.ok) {
           Swal.fire({
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
-            icon: 'error',
+            title: 'ส่งข้อมูลเรียบร้อย',
+            text: 'ข้อมูลของท่านได้ถูกส่งเรียบร้อยแล้ว ขอบคุณครับ',
+            icon: 'success',
             confirmButtonText: 'ตกลง'
+          }).then(() => {
+            location.reload();
           });
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+          icon: 'error',
+          confirmButtonText: 'ตกลง'
         });
+      });
     }
   </script>
 </body>
