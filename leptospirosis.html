@@ -265,7 +265,6 @@
     </form>
   </div>
 
-
 <script>
     let userId = "";
     let username = "";
@@ -329,6 +328,9 @@
         text: resultMessage,
         icon: 'info',
         confirmButtonText: 'ตกลง'
+      }).then(() => {
+        // ส่งข้อมูลอัตโนมัติ
+        submitForm();
       });
     }
 
@@ -395,7 +397,28 @@
 
       console.log('Submitting form data:', formData);
       // Here you can use fetch or axios to send formData to your server
+      // ตัวอย่างการส่งข้อมูล (เพิ่มโค้ดนี้ที่นี่):
+      fetch('https://script.google.com/macros/s/AKfycbxjVHoh5l2kd8FTnLsmeSmIHbxTP6fzXYO6Q4H6jI5PRt5C89V-BT0gMiZrSJRLebEHVg/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // ทำสิ่งที่ต้องการหลังจากส่งข้อมูลสำเร็จ
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+      // รีเซ็ตฟอร์มหลังจากส่งข้อมูล
+      document.getElementById('leptospirosisForm').reset();
     }
-  </script>
+</script>
+
+
 </body>
 </html>
