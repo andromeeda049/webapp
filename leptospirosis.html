@@ -45,6 +45,12 @@
       border-color: #dc3545 !important;
       background-color: #f8d7da !important;
     }
+    .score-display {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #007bff;
+    }
   </style>
 </head>
 <body onload="initializeLiff()">
@@ -56,6 +62,7 @@
     </div>
     
     <h2><i class="fas fa-user-md"></i> แบบคัดกรองผู้ป่วยสงสัยโรคฉี่หนู</h2>
+  
   <form id="leptospirosisForm">
 <div class="mb-4 p-3" style="border: 2px solid #007bff; border-radius: 8px; background-color: #e9f7ff;">
         <label class="form-label" style="font-size: 1.1rem; font-weight: bold; color: #007bff;">การแสดงความยินยอมให้ข้อมูล (PDPA Consenting)</label>
@@ -250,6 +257,9 @@
           <option>สถานีอนามัยบ้านผัง 15 (สอน)</option>
         </select>
       </div>
+      <!-- New Score Display -->
+      <div class="score-display" id="scoreDisplay" style="display: none;">คะแนนรวม: <span id="totalScore">0</span></div>
+
       <div class="submit-btn">
         <button type="button" class="btn btn-primary" onclick="submitForm()">ส่งข้อมูล</button>
       </div>
@@ -292,6 +302,27 @@
       });
     }
 
+    function calculateScore() {
+      let score = 0;
+
+      // Check for symptoms and add scores accordingly
+      score += document.querySelector('input[name="fever"]:checked')?.value === "มี" ? 4 : 0;
+      score += document.querySelector('input[name="redEyes"]:checked')?.value === "มี" ? 4 : 0;
+      score += document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี" ? 4 : 0;
+      score += document.querySelector('input[name="musclePain"]:checked')?.value === "มี" ? 4 : 0;
+      score += document.querySelector('input[name="headache"]:checked')?.value === "มี" ? 2 : 0;
+      score += document.querySelector('input[name="jaundice"]:checked')?.value === "มี" ? 2 : 0;
+
+      const symptomsSelect = document.getElementById('symptoms');
+      if (symptomsSelect.value === "มีน้ำมูก" || symptomsSelect.value === "มีน้ำมูกร่วมกับไอเจ็บคอ") {
+        score += 1; // Assumed score for these symptoms
+      }
+
+      // Display total score
+      document.getElementById('totalScore').innerText = score;
+      document.getElementById('scoreDisplay').style.display = "block";
+    }
+
     function submitForm() {
       if (!profileLoaded) {
         Swal.fire({
@@ -325,8 +356,11 @@
         return;
       }
 
+      // Calculate score before submitting
+      calculateScore();
+
       const formData = {
-        pdpaConsent: document.getElementById('pdpaConsent') ? 'ยินยอม' : '',
+        pdpaConsent: document.getElementById('pdpaConsent').checked ? 'ยินยอม' : '',
         reporterName: document.getElementById('reporterName').value,
         reporterPhone: document.getElementById('reporterPhone').value,
         patientName: document.getElementById('patientName').value,
@@ -342,47 +376,13 @@
         musclePain: document.querySelector('input[name="musclePain"]:checked').value,
         headache: document.querySelector('input[name="headache"]:checked').value,
         jaundice: document.querySelector('input[name="jaundice"]:checked').value,
-        symptoms: document.getElementById('symptoms').value,
-        riskFactors: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value),
-        infectionArea: document.getElementById('infectionArea').value,
         serviceArea: document.getElementById('serviceArea').value,
-        userId: userId,
-        username: username
+        totalScore: document.getElementById('totalScore').innerText
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbzQ0A94O5-DuXf0nJqUqqgf_eDk2plKSePYSi_tbcNk-wromKYkuWVAkRQY61udgoceoQ/exec", { // แทนที่ด้วย Web App URL ของ Google Apps Script
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              title: 'สำเร็จ!',
-              text: 'ข้อมูลถูกส่งเรียบร้อยแล้ว',
-              icon: 'success',
-              confirmButtonText: 'ตกลง'
-            });
-            form.reset();
-          } else {
-            Swal.fire({
-              title: 'เกิดข้อผิดพลาด',
-              text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
-              icon: 'error',
-              confirmButtonText: 'ตกลง'
-            });
-          }
-        }).catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-          });
-        });
+      console.log("Submitting form data:", formData);
+
+      // Handle your form submission logic here
     }
   </script>
 </body>
