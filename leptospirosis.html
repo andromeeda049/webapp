@@ -49,7 +49,6 @@
 </head>
 <body onload="initializeLiff()">
   <div class="container mt-5">
-    <!-- Section for displaying userId, username, and profile image -->
     <div id="userInfo" class="text-center mb-4" style="display: none;">
       <img id="profileImage" src="" alt="Profile Image" class="rounded-circle" width="100" height="100">
       <p id="usernameDisplay" class="mt-2 font-weight-bold"></p>
@@ -59,7 +58,7 @@
     <h2><i class="fas fa-user-md"></i> แบบคัดกรองผู้ป่วยสงสัยโรคฉี่หนู</h2>
 
     <form id="leptospirosisForm">
-<div class="mb-4 p-3" style="border: 2px solid #007bff; border-radius: 8px; background-color: #e9f7ff;">
+      <div class="mb-4 p-3" style="border: 2px solid #007bff; border-radius: 8px; background-color: #e9f7ff;">
         <label class="form-label" style="font-size: 1.1rem; font-weight: bold; color: #007bff;">การแสดงความยินยอมให้ข้อมูล (PDPA Consenting)</label>
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="pdpaConsent" value="ยินยอม" required>
@@ -68,31 +67,19 @@
       </div>
       <div class="mb-3">
         <label for="reporterName" class="form-label">ชื่อ-สกุล (ผู้ให้ข้อมูล)</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-user"></i></span>
-          <input type="text" class="form-control" id="reporterName" placeholder="หากไม่มีให้เว้นว่าง" style="color: #6c757d;">
-        </div>
+        <input type="text" class="form-control" id="reporterName" required>
       </div>
       <div class="mb-3">
         <label for="reporterPhone" class="form-label">เบอร์โทรศัพท์ (ผู้ให้ข้อมูล)</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-phone"></i></span>
-          <input type="tel" class="form-control" id="reporterPhone" placeholder="หากไม่มีให้เว้นว่าง" style="color: #6c757d;">
-        </div>
+        <input type="tel" class="form-control" id="reporterPhone" required>
       </div>
       <div class="mb-3">
         <label for="patientName" class="form-label">ชื่อ-สกุล (ผู้ป่วยที่มีอาการสงสัย)</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-user"></i></span>
-          <input type="text" class="form-control" id="patientName" required>
-        </div>
+        <input type="text" class="form-control" id="patientName" required>
       </div>
       <div class="mb-3">
         <label for="patientPhone" class="form-label">เบอร์โทรศัพท์ (ผู้ป่วยที่มีอาการสงสัย)</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-phone"></i></span>
-          <input type="tel" class="form-control" id="patientPhone" required>
-        </div>
+        <input type="tel" class="form-control" id="patientPhone" required>
       </div>
       <div class="mb-3">
         <label for="occupation" class="form-label">อาชีพ</label>
@@ -107,10 +94,7 @@
       </div>
       <div class="mb-3">
         <label for="address" class="form-label">บ้านเลขที่</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-home"></i></span>
-          <input type="text" class="form-control" id="address" required>
-        </div>
+        <input type="text" class="form-control" id="address" required>
       </div>
       <div class="mb-3">
         <label for="villageNumber" class="form-label">หมู่ที่</label>
@@ -126,10 +110,7 @@
       </div>
       <div class="mb-3">
         <label for="illnessStartDate" class="form-label">วันที่เริ่มมีอาการป่วย</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-          <input type="date" class="form-control" id="illnessStartDate" required>
-        </div>
+        <input type="date" class="form-control" id="illnessStartDate" required>
       </div>
       <div class="mb-3">
         <label class="form-label">มีไข้สูงเฉียบพลันหรือไม่ (4 คะแนน)</label>
@@ -165,7 +146,7 @@
         </div>
       </div>
       <div class="mb-3">
-        <label class="form-label">มีอาการปวดกล้ามเนื้อและกดเจ็บ โดยเฉพาะน่อง โคนขา และหลัง (4 คะแนน)</label>
+        <label class="form-label">มีอาการปวดกล้ามเนื้อและกดเจ็บ (4 คะแนน)</label>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="musclePain" id="musclePainYes" value="มี" required>
           <label class="form-check-label" for="musclePainYes">มี</label>
@@ -207,7 +188,7 @@
         </select>
       </div>
       <div class="mb-3">
-        <label class="form-label">มีพฤติกรรมเสี่ยงต่อไปนี้หรือไม่ (เลือกตอบได้หลายข้อ)</label>
+        <label class="form-label">มีพฤติกรรมเสี่ยงต่อไปนี้หรือไม่</label>
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="riskFarming" value="ทำนา ทำไร่ ทำสวน">
           <label class="form-check-label" for="riskFarming">ทำนา ทำไร่ ทำสวน</label>
@@ -224,18 +205,6 @@
           <input class="form-check-input" type="checkbox" id="riskAnimals" value="เลี้ยงสัตว์">
           <label class="form-check-label" for="riskAnimals">เลี้ยงสัตว์</label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="riskMud" value="ย่ำในน้ำ โคลนตม ที่ชื้นแฉะ">
-          <label class="form-check-label" for="riskMud">ย่ำในน้ำ โคลนตม ที่ชื้นแฉะ</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="riskSwimming" value="แช่หรือว่ายน้ำในแหล่งน้ำ">
-          <label class="form-check-label" for="riskSwimming">แช่หรือว่ายน้ำในแหล่งน้ำ</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="riskOther" value="อื่นๆ">
-          <label class="form-check-label" for="riskOther">อื่นๆ</label>
-        </div>
       </div>
       <div class="mb-3">
         <label for="infectionArea" class="form-label">พื้นที่ที่คาดว่าจะติดเชื้อโรคไข้ฉี่หนู</label>
@@ -248,15 +217,12 @@
           <option>โรงพยาบาลมะนัง</option>
           <option>รพ.สต.ปาล์มพัฒนา</option>
           <option>รพ.สต.บ้านมะนัง</option>
-          <option>รพ.สต.บ้านผัง 50</option>
-          <option>สถานีอนามัยบ้านผัง 15 (สอน)</option>
         </select>
       </div>
       <div class="submit-btn">
         <button type="button" class="btn btn-primary" onclick="submitForm()">ส่งข้อมูล</button>
       </div>
     </form>
-    
   </div>
   
   <script>
@@ -290,7 +256,6 @@
 
         document.getElementById('userInfo').style.display = "block";
         profileLoaded = true;
-
       }).catch(err => {
         console.error('Failed to get user profile', err);
       });
@@ -339,11 +304,22 @@
         address: document.getElementById('address').value,
         villageNumber: document.getElementById('villageNumber').value,
         subdistrict: document.getElementById('subdistrict').value,
+        illnessStartDate: document.getElementById('illnessStartDate').value,
+        fever: document.querySelector('input[name="fever"]:checked').value,
+        redEyes: document.querySelector('input[name="redEyes"]:checked').value,
+        stiffNeck: document.querySelector('input[name="stiffNeck"]:checked').value,
+        musclePain: document.querySelector('input[name="musclePain"]:checked').value,
+        headache: document.querySelector('input[name="headache"]:checked').value,
+        jaundice: document.querySelector('input[name="jaundice"]:checked').value,
+        symptoms: document.getElementById('symptoms').value,
+        riskFactors: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value),
+        infectionArea: document.getElementById('infectionArea').value,
+        serviceArea: document.getElementById('serviceArea').value,
         userId: userId,
         username: username
       };
 
-      fetch("https://andromeeda049.github.io/webapp/leptospirosis.html", { // แก้ไข URL ให้เป็น API ปลายทางของคุณ
+      fetch("https://script.google.com/macros/s/AKfycbyy69EONBg70X4qJuGin7vfzCIOsBKskKS4-B-LV_UQfYyfpdJHFciqSyjQxds8DHTGnw/exec", { // แทนที่ด้วย Web App URL ของ Google Apps Script
         method: "POST",
         headers: {
           "Content-Type": "application/json"
