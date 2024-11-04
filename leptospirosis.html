@@ -54,10 +54,10 @@
       <p id="usernameDisplay" class="mt-2 font-weight-bold"></p>
       <p id="userIdDisplay" class="text-muted"></p>
     </div>
-    
+
     <h2><i class="fas fa-user-md"></i> แบบคัดกรองผู้ป่วยสงสัยโรคฉี่หนู</h2>
 
-    
+
     <form id="leptospirosisForm">
 <div class="mb-4 p-3" style="border: 2px solid #007bff; border-radius: 8px; background-color: #e9f7ff;">
         <label class="form-label" style="font-size: 1.1rem; font-weight: bold; color: #007bff;">การแสดงความยินยอมให้ข้อมูล (PDPA Consenting)</label>
@@ -253,18 +253,18 @@
         </select>
       </div>
       <!-- New Score Calculation Section -->
-       <div class="mb-3">
+      <div class="mb-3">
         <label for="totalScore" class="form-label">คะแนนรวม</label>
         <input type="text" class="form-control" id="totalScore" readonly>
       </div>
 
       <div class="submit-btn">
-        <button type="button" class="btn btn-primary" id="calculateScoreButton" onclick="calculateScore()">คำนวณคะแนน</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm()">ส่งข้อมูล</button>
       </div>
     </form>
   </div>
 
-<script>
+  <script>
     let userId = "";
     let username = "";
     let profileLoaded = false;
@@ -300,81 +300,59 @@
       });
     }
 
-function calculateScore() {
-  let score = 0;
+    function calculateScore() {
+      let score = 0;
 
-  // Adding scores based on the selected options
-  if (document.querySelector('input[name="fever"]:checked')?.value === "มี") score += 4;
-  if (document.querySelector('input[name="redEyes"]:checked')?.value === "มี") score += 4;
-  if (document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี") score += 4;
-  if (document.querySelector('input[name="musclePain"]:checked')?.value === "มี") score += 4;
-  if (document.querySelector('input[name="headache"]:checked')?.value === "มี") score += 2;
-  if (document.querySelector('input[name="jaundice"]:checked')?.value === "มี") score += 2;
+      // Adding scores based on the selected options
+      if (document.querySelector('input[name="fever"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="redEyes"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="stiffNeck"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="musclePain"]:checked').value === "มี") score += 4;
+      if (document.querySelector('input[name="headache"]:checked').value === "มี") score += 2;
+      if (document.querySelector('input[name="jaundice"]:checked').value === "มี") score += 2;
 
-  // Update total score display
-  document.getElementById('totalScore').value = score;
-
-  return score;
-}
-
-function submitForm() {
-  if (!profileLoaded) {
-    Swal.fire({
-      title: 'เกิดข้อผิดพลาด',
-      text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
-      icon: 'error',
-      confirmButtonText: 'ตกลง'
-    });
-    return;
-  }
-
-  const form = document.getElementById('leptospirosisForm');
-  let valid = true;
-
-  form.querySelectorAll('input, select').forEach(field => {
-    if (!field.checkValidity()) {
-      field.classList.add('alert-field');
-      valid = false;
-    } else {
-      field.classList.remove('alert-field');
+      // Update total score display
+      document.getElementById('totalScore').value = score;
     }
-  });
 
-  if (!valid) {
-    Swal.fire({
-      title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-      text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
-      icon: 'warning',
-      confirmButtonText: 'ตกลง'
-    });
-    return;
-  }
+    function submitForm() {
+      if (!profileLoaded) {
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถดึงข้อมูลผู้ใช้จาก LINE ได้ กรุณาลองใหม่อีกครั้ง',
+          icon: 'error',
+          confirmButtonText: 'ตกลง'
+        });
+        return;
+      }
 
-  // Calculate score before submitting
-  const totalScore = calculateScore();
+      const form = document.getElementById('leptospirosisForm');
+      let valid = true;
 
-  // Show alert with result
-  let resultMessage;
-  if (totalScore > 10) {
-    resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
-  } else {
-    resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. ขอบคุณที่กรอกแบบฟอร์ม!';
-  }
+      form.querySelectorAll('input, select').forEach(field => {
+        if (!field.checkValidity()) {
+          field.classList.add('alert-field');
+          valid = false;
+        } else {
+          field.classList.remove('alert-field');
+        }
+      });
 
-  Swal.fire({
-    title: 'ผลการคำนวณคะแนน',
-    text: resultMessage,
-    icon: 'info',
-    confirmButtonText: 'ตกลง'
-  }).then(() => {
-    // ส่งข้อมูลอัตโนมัติ
-    sendFormData();
-  });
-}
+      if (!valid) {
+        Swal.fire({
+          title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+          text: 'มีบางฟิลด์ที่ยังไม่ได้กรอกหรือกรอกไม่ครบถ้วน',
+          icon: 'warning',
+          confirmButtonText: 'ตกลง'
+        });
+        return;
+      }
 
-function sendFormData() {
-  const formData = {
-        pdpaConsent: document.getElementById('pdpaConsent').checked ? 'ยินยอม' : '',
+      // Calculate score before submitting
+      calculateScore();
+
+      const formData = {
+        pdpaConsent: document.getElementById('pdpaConsent') ? 'ยินยอม' : '',
         reporterName: document.getElementById('reporterName').value,
         reporterPhone: document.getElementById('reporterPhone').value,
         patientName: document.getElementById('patientName').value,
@@ -383,45 +361,55 @@ function sendFormData() {
         address: document.getElementById('address').value,
         villageNumber: document.getElementById('villageNumber').value,
         subdistrict: document.getElementById('subdistrict').value,
-        district: document.getElementById('district').value,
-        province: document.getElementById('province').value,
-        symptoms: {
-          fever: document.querySelector('input[name="fever"]:checked')?.value,
-          redEyes: document.querySelector('input[name="redEyes"]:checked')?.value,
-          stiffNeck: document.querySelector('input[name="stiffNeck"]:checked')?.value,
-          musclePain: document.querySelector('input[name="musclePain"]:checked')?.value,
-          headache: document.querySelector('input[name="headache"]:checked')?.value,
-          jaundice: document.querySelector('input[name="jaundice"]:checked')?.value
-        },
-        totalScore: document.getElementById('totalScore').value,
+        illnessStartDate: document.getElementById('illnessStartDate').value,
+        fever: document.querySelector('input[name="fever"]:checked').value,
+        redEyes: document.querySelector('input[name="redEyes"]:checked').value,
+        stiffNeck: document.querySelector('input[name="stiffNeck"]:checked').value,
+        musclePain: document.querySelector('input[name="musclePain"]:checked').value,
+        headache: document.querySelector('input[name="headache"]:checked').value,
+        jaundice: document.querySelector('input[name="jaundice"]:checked').value,
+        symptoms: document.getElementById('symptoms').value,
+        riskFactors: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value),
+        infectionArea: document.getElementById('infectionArea').value,
+        serviceArea: document.getElementById('serviceArea').value,
+        totalScore: document.getElementById('totalScore').value, // Add total score to formData
         userId: userId,
         username: username
       };
 
-  console.log('Submitting form data:', formData);
-  // Here you can use fetch or axios to send formData to your server
-  // ตัวอย่างการส่งข้อมูล (เพิ่มโค้ดนี้ที่นี่):
-  fetch('https://script.google.com/macros/s/AKfycbxjVHoh5l2kd8FTnLsmeSmIHbxTP6fzXYO6Q4H6jI5PRt5C89V-BT0gMiZrSJRLebEHVg/exec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formData),
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-    // ทำสิ่งที่ต้องการหลังจากส่งข้อมูลสำเร็จ
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+      fetch("https://script.google.com/macros/s/AKfycbzQ0A94O5-DZJg1yo8fJ8Z68j-xed3uVtLDCsG9lNx7t4_0xn64IemAd4dXlQWcU8e3X/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbxjVHoh5l2kd8FTnLsmeSmIHbxTP6fzXYO6Q4H6jI5PRt5C89V-BT0gMiZrSJRLebEHVg/exec", {
+        method: "POST",
+        body: JSON.stringify(formData)
+      })
+     .then(response => {
+        if (response.ok) {
+          let message = totalScore > 10 ? 
+            'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!' : 
+            'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. ขอบคุณที่กรอกแบบฟอร์ม!';
 
-  // รีเซ็ตฟอร์มหลังจากส่งข้อมูล
-  document.getElementById('leptospirosisForm').reset();
-}
-</script>
-
+          Swal.fire({
+            title: 'ส่งข้อมูลเรียบร้อย',
+            text: 'ข้อมูลของท่านได้ถูกส่งเรียบร้อยแล้ว ขอบคุณครับ',
+            icon: 'success',
+            confirmButtonText: 'ตกลง'
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+          icon: 'error',
+          confirmButtonText: 'ตกลง'
+        });
+      });
+    }
+  </script>
 </body>
 </html>
-
