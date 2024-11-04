@@ -300,39 +300,71 @@
       });
     }
 
-    function calculateScore() {
-      let score = 0;
+    // function calculateScore() {
+    //   let score = 0;
 
-      // Adding scores based on the selected options
-      if (document.querySelector('input[name="fever"]:checked')?.value === "มี") score += 4;
-      if (document.querySelector('input[name="redEyes"]:checked')?.value === "มี") score += 4;
-      if (document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี") score += 4;
-      if (document.querySelector('input[name="musclePain"]:checked')?.value === "มี") score += 4;
-      if (document.querySelector('input[name="headache"]:checked')?.value === "มี") score += 2;
-      if (document.querySelector('input[name="jaundice"]:checked')?.value === "มี") score += 2;
+    //   // Adding scores based on the selected options
+    //   if (document.querySelector('input[name="fever"]:checked')?.value === "มี") score += 4;
+    //   if (document.querySelector('input[name="redEyes"]:checked')?.value === "มี") score += 4;
+    //   if (document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี") score += 4;
+    //   if (document.querySelector('input[name="musclePain"]:checked')?.value === "มี") score += 4;
+    //   if (document.querySelector('input[name="headache"]:checked')?.value === "มี") score += 2;
+    //   if (document.querySelector('input[name="jaundice"]:checked')?.value === "มี") score += 2;
 
-      // Update total score display
-      document.getElementById('totalScore').value = score;
+    //   // Update total score display
+    //   document.getElementById('totalScore').value = score;
 
-      // Show alert with result
-      let resultMessage;
-      if (score > 10) {
-        resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
-      } else {
-        resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. ขอบคุณที่กรอกแบบฟอร์ม!';
-      }
+    //   // Show alert with result
+    //   let resultMessage;
+    //   if (score > 10) {
+    //     resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
+    //   } else {
+    //     resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. ขอบคุณที่กรอกแบบฟอร์ม!';
+    //   }
 
-      Swal.fire({
-        title: 'ผลการคำนวณคะแนน',
-        text: resultMessage,
-        icon: 'info',
-        confirmButtonText: 'ตกลง'
-      }).then(() => {
-        // ส่งข้อมูลอัตโนมัติ
-        submitForm();
-      });
-    }
+    //   Swal.fire({
+    //     title: 'ผลการคำนวณคะแนน',
+    //     text: resultMessage,
+    //     icon: 'info',
+    //     confirmButtonText: 'ตกลง'
+    //   }).then(() => {
+    //     // ส่งข้อมูลอัตโนมัติ
+    //     submitForm();
+    //   });
+    // }
 
+  function calculateScore() {
+  let score = 0;
+
+  // Adding scores based on the selected options
+  if (document.querySelector('input[name="fever"]:checked')?.value === "มี") score += 4;
+  if (document.querySelector('input[name="redEyes"]:checked')?.value === "มี") score += 4;
+  if (document.querySelector('input[name="stiffNeck"]:checked')?.value === "มี") score += 4;
+  if (document.querySelector('input[name="musclePain"]:checked')?.value === "มี") score += 4;
+  if (document.querySelector('input[name="headache"]:checked')?.value === "มี") score += 2;
+  if (document.querySelector('input[name="jaundice"]:checked')?.value === "มี") score += 2;
+
+  // Update total score display
+  document.getElementById('totalScore').value = score;
+
+  // Show alert with result
+  let resultMessage;
+  if (score > 10) {
+    resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
+  } else {
+    resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + score + '. ขอบคุณที่กรอกแบบฟอร์ม!';
+  }
+
+  Swal.fire({
+    title: 'ผลการคำนวณคะแนน',
+    text: resultMessage,
+    icon: 'info',
+    confirmButtonText: 'ตกลง'
+  }).then(() => {
+    // ส่งข้อมูลอัตโนมัติ
+    submitForm();
+  });
+}
     function submitForm() {
       if (!profileLoaded) {
         Swal.fire({
