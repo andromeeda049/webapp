@@ -259,6 +259,7 @@
       </div>
 
       <div class="submit-btn">
+        <button id="calculateScoreButton">คำนวณคะแนน</button>
         <button type="button" class="btn btn-primary" onclick="submitForm()">ส่งข้อมูล</button>
       </div>
     </form>
@@ -314,6 +315,23 @@
       // Update total score display
       document.getElementById('totalScore').value = score;
     }
+    function calculatetotalScore() {
+    let totalScore = 0;
+    // ... (การคำนวณคะแนนที่มีอยู่)
+
+    let resultMessage;
+    if (totalScore > 10) {
+        resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!';
+    } else {
+        resultMessage = 'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. ขอบคุณที่กรอกแบบฟอร์ม!';
+    }
+
+    alert(resultMessage); // แสดงผลคะแนน
+}
+
+    document.getElementById("calculatetotalScoreButton").onclick = function() {
+    calculatetotalScore();
+};
 
     function submitForm() {
       if (!profileLoaded) {
