@@ -381,8 +381,12 @@
         method: "POST",
         body: JSON.stringify(formData)
       })
-      .then(response => {
+     .then(response => {
         if (response.ok) {
+          let message = totalScore > 10 ? 
+            'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. กรุณาเดินทางไปยังโรงพยาบาลหรือหน่วยบริการใกล้บ้านเพื่อตรวจวินิจฉัยเบื้องต้นโดยด่วน!' : 
+            'คะแนนความเสี่ยงของท่านคือ ' + totalScore + '. ขอบคุณที่กรอกแบบฟอร์ม!';
+
           Swal.fire({
             title: 'ส่งข้อมูลเรียบร้อย',
             text: 'ข้อมูลของท่านได้ถูกส่งเรียบร้อยแล้ว ขอบคุณครับ',
